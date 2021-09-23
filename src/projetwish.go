@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type personnage struct {
 	nom        string
@@ -18,36 +20,64 @@ func (p *personnage) init(nom string, classe string, pvmax int, pvactuel int, in
 	p.pvactuel = pvactuel
 	p.inventaire = inventaire
 }
-
-func main() {
-	var p1 personnage
-	p1.init("jackouille", "fripouille", 12, 53, []string{"kdjrb", "hjbdbhehu", "popovie"})
-	fmt.Println(p1)
-}
-
 func (p *personnage) displayInfo() {
-	fmt.Print("nom:", p.nom)
-	fmt.Print("nom:", p.classe)
-	fmt.Print("nom:", p.pvmax)
-	fmt.Print("nom:", p.pvactuel)
-	fmt.Print("nom:", p.inventaire)
+	fmt.Println("nom:", p.nom)
+	fmt.Println("classe:", p.classe)
+	fmt.Println("viemaximun:", p.pvmax)
+	fmt.Println("PV:", p.pvactuel)
+	fmt.Println("INVENTAIRE:", p.inventaire)
 }
 func (p *personnage) popovie() {
 	if p.pvmax == p.pvactuel {
 		fmt.Print("tu a deja toutes tes vies")
 	} else {
-		for i := 1; i < len(p.inventaire); i++ {
-			if len(p.inventaire) == 0 {
-				fmt.Print("ton inventaire est vide")
-			} else {
+		if len(p.inventaire) == 0 {
+			fmt.Print("ton inventaire est vide")
+		} else {
+			for i := 0; i < len(p.inventaire); i++ {
 				if p.inventaire[i] == "popovie" {
-					if p.pvactuel+2 > p.pvmax {
-						p.pvactuel = p.pvactuel + 1
+					if p.pvactuel+50 > p.pvmax {
+						p.pvactuel = p.pvactuel + p.pvmax - p.pvactuel
+						p.removeInventory("popovie")
+						break
 					} else {
-						p.pvactuel = p.pvactuel + 2
+						p.pvactuel = p.pvactuel + 50
+						p.removeInventory("popovie")
+						break
 					}
+				} else {
+					fmt.Println("Plus de popo")
 				}
 			}
 		}
 	}
+}
+
+func (p *personnage) accessInventory() {
+	for i := len(p.inventaire); i <= len(p.inventaire); i++ {
+		if len(p.inventaire) != 0 {
+			fmt.Println("Inventaire : \n", "--------------------------------")
+			fmt.Println(p.inventaire)
+		} else if len(p.inventaire) == 0 {
+			fmt.Println("Inventaire : \n", "--------------------------------")
+			fmt.Println("L'inventaire est vide ")
+		}
+	}
+}
+
+func (p *personnage) removeInventory(itemremove string) {
+	for i := 0; i <= len(p.inventaire); i++ {
+		if itemremove == p.inventaire[i] {
+			p.inventaire[i] = ""
+			break
+		}
+	}
+}
+
+func main() {
+	var p1 personnage
+	p1.init("jackouille", "fripouille", 150, 120, []string{"popovie", "popovie", "popovie"})
+	p1.popovie()
+	p1.displayInfo()
+	fmt.Println()
 }
