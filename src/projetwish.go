@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-type personnage struct {
+type personnage struct { //creation d'une classe
 	nom        string
 	classe     string
 	niveau     int
@@ -13,32 +13,32 @@ type personnage struct {
 	inventaire []string
 }
 
-func (p *personnage) init(nom string, classe string, pvmax int, pvactuel int, inventaire []string) {
+func (p *personnage) init(nom string, classe string, pvmax int, pvactuel int, inventaire []string) { //initialise des personnages
 	p.nom = nom
 	p.classe = classe
 	p.pvmax = pvmax
 	p.pvactuel = pvactuel
 	p.inventaire = inventaire
 }
-func (p *personnage) displayInfo() {
+func (p *personnage) displayInfo() { // affiche les attribut des personnages
 	fmt.Println("nom:", p.nom)
 	fmt.Println("classe:", p.classe)
 	fmt.Println("viemaximun:", p.pvmax)
 	fmt.Println("PV:", p.pvactuel)
 	fmt.Println("INVENTAIRE:", p.inventaire)
 }
-func (p *personnage) popovie() {
-	if p.pvmax == p.pvactuel {
+func (p *personnage) popovie() { // soigne le perso
+	if p.pvmax == p.pvactuel { //si le personnage a toutes ses vies il ne peut pas se soigner
 		fmt.Print("tu a deja toutes tes vies")
 	} else {
-		if len(p.inventaire) == 0 {
+		if len(p.inventaire) == 0 { //si l'inventaire du personnage est vide il peut pas se soigner
 			fmt.Print("ton inventaire est vide")
 		} else {
-			for i := 0; i < len(p.inventaire); i++ {
+			for i := 0; i < len(p.inventaire); i++ { // parcours de l'inventaire du personnage a la recherche de popo de soin
 				if p.inventaire[i] == "popovie" {
-					if p.pvactuel+50 > p.pvmax {
+					if p.pvactuel+50 > p.pvmax { // verifie si la santé du personnage ne sera pas superieur a celle maximun autorisé lors du heal
 						p.pvactuel = p.pvactuel + p.pvmax - p.pvactuel
-						p.removeInventory("popovie")
+						p.removeInventory("popovie") //appelle de la fonction remove qui supprimme la popo de soin consommé
 						fmt.Println(p.nom, ":", p.pvactuel, "/", p.pvmax)
 						break
 					} else {
@@ -55,7 +55,7 @@ func (p *personnage) popovie() {
 	}
 }
 
-func (p *personnage) accessInventory() {
+func (p *personnage) accessInventory() { // permet d'affiche le contenu d'un inventaire
 	for i := len(p.inventaire); i <= len(p.inventaire); i++ {
 		if len(p.inventaire) != 0 {
 			fmt.Println("Inventaire : \n", "--------------------------------")
@@ -67,7 +67,7 @@ func (p *personnage) accessInventory() {
 	}
 }
 
-func (p *personnage) removeInventory(itemremove string) {
+func (p *personnage) removeInventory(itemremove string) { //supprime un objet de l'inventaire d'un personnage
 	for i := 0; i <= len(p.inventaire); i++ {
 		if itemremove == p.inventaire[i] {
 			p.inventaire[i] = ""
@@ -80,11 +80,13 @@ func (p *personnage) addInventory(itemadd string) {
 	fmt.Print(p.inventaire)
 }
 
-//func ()pnj
+func (p *personnage) pnjsoin() { // pnj vendeurs qui vend pas
+	p.addInventory("popovie")
+}
 
 func main() {
 	var p1 personnage
-	p1.init("jackouille", "fripouille", 150, 120, []string{"popovie", "popovie", "popovie"})
+	p1.init("jackouille", "fripouille", 150, 120, []string{"popovie", "popovie", "poison", "popovie"})
 	p1.popovie()
 	p1.displayInfo()
 	fmt.Println()
