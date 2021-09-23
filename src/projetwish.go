@@ -13,10 +13,11 @@ type personnage struct { //creation d'une classe
 	inventaire []string
 }
 
-func (p *personnage) init(nom string, classe string, pvmax int, pvactuel int, inventaire []string) { //initialise des personnages
+func (p *personnage) init(nom string, classe string, pvmax int, pvactuel int, niveau int, inventaire []string) { //initialise des personnages
 	p.nom = nom
 	p.classe = classe
 	p.pvmax = pvmax
+	p.niveau = niveau
 	p.pvactuel = pvactuel
 	p.inventaire = inventaire
 }
@@ -80,8 +81,12 @@ func (p *personnage) addInventory(itemadd string) {
 	fmt.Println(p.inventaire)
 }
 
-func (p *personnage) pnjsoin() { // pnj vendeurs qui vend pas
-	p.addInventory("popovie")
+func (p *personnage) pnj(i int) { // pnj vendeurs qui vend pas
+	if i == 0 {
+		p.addInventory("popovie")
+	} else {
+		p.addInventory("poison")
+	}
 }
 
 func (p *personnage) dead() { //verifie si le perso est mort
@@ -90,9 +95,12 @@ func (p *personnage) dead() { //verifie si le perso est mort
 		p.pvactuel = p.pvmax * 50 / 100
 	}
 }
+func (p *personnage) poison() {
+
+}
 func main() {
 	var p1 personnage
-	p1.init("jackouille", "fripouille", 150, 50, []string{"popovie", "popovie", "poison", "popovie"})
+	p1.init("jackouille", "fripouille", 150, 50, 1, []string{"popovie", "popovie", "poison", "popovie"})
 	p1.dead()
 	p1.displayInfo()
 	fmt.Println()
