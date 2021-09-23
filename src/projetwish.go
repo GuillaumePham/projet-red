@@ -13,9 +13,10 @@ type personnage struct { //creation d'une classe
 	pvactuel   int
 	inventaire []string
 	skill      []string
+	money      int
 }
 
-func (p *personnage) init(nom string, classe string, pvmax int, pvactuel int, niveau int, inventaire []string, skill string) { //initialise des personnages
+func (p *personnage) init(nom string, classe string, pvmax int, pvactuel int, niveau int, inventaire []string, skill string, money int) { //initialise des personnages
 	p.nom = nom
 	p.classe = classe
 	p.pvmax = pvmax
@@ -23,6 +24,7 @@ func (p *personnage) init(nom string, classe string, pvmax int, pvactuel int, ni
 	p.pvactuel = pvactuel
 	p.inventaire = inventaire
 	p.skill = []string{"coup de point"}
+	money = 100
 }
 func (p *personnage) displayInfo() { // affiche les attribut des personnages
 	fmt.Println("nom:", p.nom)
@@ -90,21 +92,21 @@ func (p *personnage) addInventory(itemadd string) bool {
 	return true
 }
 
-func (p *personnage) pnj(i int) { // pnj vendeurs qui vend pas
+/* func (p *personnage) pnj(i int) { // pnj vendeurs qui vend pas
 	if i == 0 {
 		p.addInventory("popovie")
 	} else if i == 1 {
 		p.addInventory("poison")
 	} else {
 		if p.addInventory("Livre de Sort: Boule de feu") == false {
-			fmt.Println("Plus de Place ☺")
+			fmt.Println(" ! Plus de Place !")
 
 		} else {
 			p.removeInventory("Livre de Sort: Boule de feu")
 			p.spellBook("Boule de feu")
 		}
 	}
-}
+} */
 
 func (p *personnage) dead() { //verifie si le perso est mort
 	if p.pvactuel < 0 {
@@ -113,7 +115,7 @@ func (p *personnage) dead() { //verifie si le perso est mort
 	}
 }
 func (p *personnage) poison() { // retire 30 hp aux personnages
-	for i := 0; i < 3; i++ {
+	for i := 0; i <= 3; i++ {
 		time.Sleep(1 * time.Second)
 		fmt.Println(p.nom, ":", p.pvactuel)
 		p.pvactuel = p.pvactuel - 10
@@ -127,7 +129,7 @@ func (p *personnage) poison() { // retire 30 hp aux personnages
 func (p *personnage) spellBook(talentcaché string) { //attribue des compétemces en fonctions des livres achetés
 	for i := 0; i < len(p.skill); i++ {
 		if p.skill[i] == talentcaché {
-			fmt.Println("Tu possédes déjà ce talent")
+			fmt.Println("_____Tu possédes déjà ce talent______")
 			break
 		} else {
 			p.skill = append(p.skill, talentcaché)
@@ -135,11 +137,68 @@ func (p *personnage) spellBook(talentcaché string) { //attribue des compétemce
 		}
 	}
 }
+func (p *personnage) menu() {
+	var commande string
+	fmt.Println("☺----- Bienvenue dans Cristian's dungeon -----☺")
+	fmt.Scan(&commande)
+	switch commande {
+	case "Information":
+		p.displayInfo()
+	case "information":
+		p.displayInfo()
+	case "Inventaire":
+		p.accessInventory()
+	case "inventaire":
+		p.accessInventory()
+
+	}
+}
+func (p *personnage) pnj(i int) { // pnj vendeurs qui vend pas
+	if i == 0 && p.money >= 3 {
+		p.addInventory("popovie")
+		p.money = p.money - 3
+	} else if i == 1 && p.money >= 6 {
+		p.addInventory("poison")
+		p.money = p.money - 6
+	}
+	if i == 2 && p.addInventory("Livre de Sort: Boule de feu") == false && p.money >= 25 {
+		p.money = p.money - 25
+		fmt.Println("Plus de Place ☺")
+
+	} 
+		//p.removeInventory("Livre de Sort: Boule de feu")
+		p.spellBook("Boule de feu")
+	}
+
+	if i == 3 && p.money >= 4 {
+		p.addInventory("Fourrure de loup")
+		p.money = p.money - 4
+	}
+	if i == 4 && p.money >= 7 {
+		p.addInventory("Peau de Troll")
+		p.money = p.money - 7
+	}
+	if i == 5 && p.money >= 3 {
+		p.addInventory("Cuir de Sanglier")
+		p.money = p.money - 3
+	}
+	if i == 6 && p.money >= 1 {
+		p.addInventory("Plume de Corbeau")
+		p.money = p.money - 1
+	}
+}
 func main() {
 	var p1 personnage
-	p1.init("jackouille", "fripouille", 150, 10, 1, []string{"popovie", "popovie", "poison", "popovie", "popovie", "popovie", "popovie", "popovie", "popovie"}, "coup de point")
+	p1.init("jackouille", "fripouille", 150, 10, 1, []string{"popovie", "poison", "popovie", "popovie", "popovie", "popovie", "popovie", "popovie"}, "coup de point", 100)
+	var p2 personnage
+	p2.init("Cristian ", "Cristian", 150, 1, 1, []string{"poison", "poison", "poison", "poison", "poison", "poison", "poison", "popovie"}, "coup de point", 100)
 	p1.poison()
-	p1.pnj(3)
-	p1.displayInfo()
+	p1.pnj(5)
+	//p1.displayInfo()
+	//p2.displayInfo()
+	//p2.poison()
 	fmt.Println()
+
+	p1.menu()
+
 }
