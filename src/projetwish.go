@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 )
 
 type personnage struct { //creation d'une classe
@@ -90,18 +91,27 @@ func (p *personnage) pnj(i int) { // pnj vendeurs qui vend pas
 }
 
 func (p *personnage) dead() { //verifie si le perso est mort
-	if p.pvactuel == 0 {
+	if p.pvactuel < 0 {
 		fmt.Println(p.nom, ": a succombé(e)")
 		p.pvactuel = p.pvmax * 50 / 100
 	}
 }
 func (p *personnage) poison() {
+	for i := 0; i < 3; i++ {
+		time.Sleep(1 * time.Second)
+		fmt.Println(p.nom, ":", p.pvactuel)
+		p.pvactuel = p.pvactuel - 10
+		if p.pvactuel < 0 {
+			p.dead()
+			break
+		}
 
+	}
 }
 func main() {
 	var p1 personnage
-	p1.init("jackouille", "fripouille", 150, 50, 1, []string{"popovie", "popovie", "poison", "popovie"})
-	p1.dead()
-	p1.displayInfo()
+	p1.init("jackouille", "fripouille", 150, 20, 1, []string{"popovie", "popovie", "poison", "popovie"})
+	p1.poison()
+	//p1.displayInfo()
 	fmt.Println()
 }
