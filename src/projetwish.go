@@ -12,7 +12,7 @@ type personnage struct { //creation d'une classe
 	pvmax      int
 	pvactuel   int
 	inventaire []string
-	skill      string
+	skill      []string
 }
 
 func (p *personnage) init(nom string, classe string, pvmax int, pvactuel int, niveau int, inventaire []string, skill string) { //initialise des personnages
@@ -22,7 +22,7 @@ func (p *personnage) init(nom string, classe string, pvmax int, pvactuel int, ni
 	p.niveau = niveau
 	p.pvactuel = pvactuel
 	p.inventaire = inventaire
-	p.skill = skill
+	p.skill = []string{"coup de point"}
 }
 func (p *personnage) displayInfo() { // affiche les attribut des personnages
 	fmt.Println("nom:", p.nom)
@@ -80,20 +80,29 @@ func (p *personnage) removeInventory(itemremove string) { //supprime un objet de
 		}
 	}
 }
-func (p *personnage) addInventory(itemadd string) {
-	if len(p.inventaire) < 9 {
+func (p *personnage) addInventory(itemadd string) bool {
+	if len(p.inventaire) < 10 {
 		p.inventaire = append(p.inventaire, itemadd) // ont ajoute dans l'inventaire du personnage un nouvelle item pour l'instant inconnue
-		fmt.Println(p.inventaire)
 	} else {
 		fmt.Println("inventaire complet")
+		return false
 	}
+	return true
 }
 
 func (p *personnage) pnj(i int) { // pnj vendeurs qui vend pas
 	if i == 0 {
 		p.addInventory("popovie")
-	} else {
+	} else if i == 1 {
 		p.addInventory("poison")
+	} else {
+		if p.addInventory("Livre de Sort: Boule de feu") == false {
+			fmt.Println("Plus de Place ☺")
+
+		} else {
+			p.removeInventory("Livre de Sort: Boule de feu")
+			p.spellBook("Boule de feu")
+		}
 	}
 }
 
@@ -115,10 +124,22 @@ func (p *personnage) poison() { // retire 30 hp aux personnages
 
 	}
 }
+func (p *personnage) spellBook(talentcaché string) { //attribue des compétemces en fonctions des livres achetés
+	for i := 0; i < len(p.skill); i++ {
+		if p.skill[i] == talentcaché {
+			fmt.Println("Tu possédes déjà ce talent")
+			break
+		} else {
+			p.skill = append(p.skill, talentcaché)
+			break
+		}
+	}
+}
 func main() {
 	var p1 personnage
-	p1.init("jackouille", "fripouille", 150, 10, 1, []string{"popovie", "popovie", "poison", "popovie", "popovie", "popovie", "popovie", "popovie", "popovie", "popovie"}, "que dalle")
+	p1.init("jackouille", "fripouille", 150, 10, 1, []string{"popovie", "popovie", "poison", "popovie", "popovie", "popovie", "popovie", "popovie", "popovie"}, "coup de point")
 	p1.poison()
+	p1.pnj(3)
 	p1.displayInfo()
 	fmt.Println()
 }
