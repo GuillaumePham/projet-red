@@ -39,10 +39,12 @@ func (p *personnage) popovie() {
 					if p.pvactuel+50 > p.pvmax {
 						p.pvactuel = p.pvactuel + p.pvmax - p.pvactuel
 						p.removeInventory("popovie")
+						fmt.Println(p.nom, ":", p.pvactuel, "/", p.pvmax)
 						break
 					} else {
 						p.pvactuel = p.pvactuel + 50
 						p.removeInventory("popovie")
+						fmt.Println(p.nom, ":", p.pvactuel, "/", p.pvmax)
 						break
 					}
 				} else {
@@ -73,6 +75,12 @@ func (p *personnage) removeInventory(itemremove string) {
 		}
 	}
 }
+func (p *personnage) addInventory(itemadd string) {
+	p.inventaire = append(p.inventaire, itemadd) // ont ajoute dans l'inventaire du personnage un nouvelle item pour l'istant inconnue
+	fmt.Print(p.inventaire)
+}
+
+//func ()pnj
 
 func main() {
 	var p1 personnage
