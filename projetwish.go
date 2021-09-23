@@ -38,39 +38,46 @@ func (p *personnage) popovie() {
 				if p.inventaire[i] == "popovie" {
 					if p.pvactuel+50 > p.pvmax {
 						p.pvactuel = p.pvactuel + p.pvmax - p.pvactuel
-						heal := 0
-						for i := 0; i < len(p.inventaire); i++ {
-							if p.inventaire[i] == "popovie" {
-								heal++
-							}
-						}
-						removeInventory()
-						/* p.inventaire = []string{}
-						for i := 0; len(p.inventaire) < heal-1; i++ {
-							p.inventaire = append(p.inventaire, "popovie") */
-						//}
+						p.removeInventory("popovie")
 
-					} else {
-						p.pvactuel = p.pvactuel + 50
-						heal := 0
-						for i := 0; i < len(p.inventaire); i++ {
-							if p.inventaire[i] == "popovie" {
-								heal++
-							}
-						}
-						/* p.inventaire = []string{}
-						for i := 0; len(p.inventaire) < heal-1; i++ {
-							p.inventaire = append(p.inventaire, "popovie") */
-						//}
+					} //else {
+
+				}
+				//heal := 0
+				/* for i := 0; i < len(p.inventaire); i++ {
+					if p.inventaire[i] == "popovie" {
+						heal++
+
 					}
-					break
-				} /* else {
-					fmt.Println("Plus de popo")
 				} */
-			}
+
+				/* p.inventaire = []string{}
+				for i := 0; len(p.inventaire) < heal-1; i++ {
+					p.inventaire = append(p.inventaire, "popovie") */
+				//}
+
+				/* } else {
+				p.pvactuel = p.pvactuel + 50
+				heal := 0
+				for i := 0; i < len(p.inventaire); i++ {
+					if p.inventaire[i] == "popovie" {
+						heal++
+					}
+				} */
+				/* p.inventaire = []string{}
+				for i := 0; len(p.inventaire) < heal-1; i++ {
+					p.inventaire = append(p.inventaire, "popovie") */
+				//}
+				//}
+				break
+			} /* else {
+				fmt.Println("Plus de popo")
+			} */
 		}
 	}
 }
+
+//}
 func (p *personnage) accessInventory() {
 	for i := len(p.inventaire); i <= len(p.inventaire); i++ {
 		if len(p.inventaire) != 0 {
@@ -83,16 +90,16 @@ func (p *personnage) accessInventory() {
 	}
 }
 
-func (p *personnage) removeInventory(test string) {
-	var itemremove string = ""
+func (p *personnage) removeInventory(itemremove string) {
 	for i := 0; i <= len(p.inventaire); i++ {
 		if itemremove == p.inventaire[i] {
-			itemremove = test[i-1:i] + test[i+1:i]
-			p.inventaire = append(p.inventaire, itemremove)
+			p.inventaire[i] = ""
 			fmt.Print(p.inventaire)
+			break
 		}
 	}
 }
+
 func main() {
 	var p1 personnage
 	p1.init("jackouille", "fripouille", 150, 120, []string{"popovie", "popovie", "popovie"})
