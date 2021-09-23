@@ -12,15 +12,17 @@ type personnage struct { //creation d'une classe
 	pvmax      int
 	pvactuel   int
 	inventaire []string
+	skill      string
 }
 
-func (p *personnage) init(nom string, classe string, pvmax int, pvactuel int, niveau int, inventaire []string) { //initialise des personnages
+func (p *personnage) init(nom string, classe string, pvmax int, pvactuel int, niveau int, inventaire []string, skill string) { //initialise des personnages
 	p.nom = nom
 	p.classe = classe
 	p.pvmax = pvmax
 	p.niveau = niveau
 	p.pvactuel = pvactuel
 	p.inventaire = inventaire
+	p.skill = skill
 }
 func (p *personnage) displayInfo() { // affiche les attribut des personnages
 	fmt.Println("nom:", p.nom)
@@ -28,6 +30,7 @@ func (p *personnage) displayInfo() { // affiche les attribut des personnages
 	fmt.Println("viemaximun:", p.pvmax)
 	fmt.Println("PV:", p.pvactuel)
 	fmt.Println("INVENTAIRE:", p.inventaire)
+	fmt.Println("skill:", p.skill)
 }
 func (p *personnage) popovie() { // soigne le perso
 	if p.pvmax == p.pvactuel { //si le personnage a toutes ses vies il ne peut pas se soigner
@@ -78,8 +81,12 @@ func (p *personnage) removeInventory(itemremove string) { //supprime un objet de
 	}
 }
 func (p *personnage) addInventory(itemadd string) {
-	p.inventaire = append(p.inventaire, itemadd) // ont ajoute dans l'inventaire du personnage un nouvelle item pour l'istant inconnue
-	fmt.Println(p.inventaire)
+	if len(p.inventaire) < 9 {
+		p.inventaire = append(p.inventaire, itemadd) // ont ajoute dans l'inventaire du personnage un nouvelle item pour l'instant inconnue
+		fmt.Println(p.inventaire)
+	} else {
+		fmt.Println("inventaire complet")
+	}
 }
 
 func (p *personnage) pnj(i int) { // pnj vendeurs qui vend pas
@@ -96,7 +103,7 @@ func (p *personnage) dead() { //verifie si le perso est mort
 		p.pvactuel = p.pvmax * 50 / 100
 	}
 }
-func (p *personnage) poison() {
+func (p *personnage) poison() { // retire 30 hp aux personnages
 	for i := 0; i < 3; i++ {
 		time.Sleep(1 * time.Second)
 		fmt.Println(p.nom, ":", p.pvactuel)
@@ -110,8 +117,8 @@ func (p *personnage) poison() {
 }
 func main() {
 	var p1 personnage
-	p1.init("jackouille", "fripouille", 150, 20, 1, []string{"popovie", "popovie", "poison", "popovie"})
+	p1.init("jackouille", "fripouille", 150, 10, 1, []string{"popovie", "popovie", "poison", "popovie", "popovie", "popovie", "popovie", "popovie", "popovie", "popovie"}, "que dalle")
 	p1.poison()
-	//p1.displayInfo()
+	p1.displayInfo()
 	fmt.Println()
 }
