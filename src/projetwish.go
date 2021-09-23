@@ -77,17 +77,23 @@ func (p *personnage) removeInventory(itemremove string) { //supprime un objet de
 }
 func (p *personnage) addInventory(itemadd string) {
 	p.inventaire = append(p.inventaire, itemadd) // ont ajoute dans l'inventaire du personnage un nouvelle item pour l'istant inconnue
-	fmt.Print(p.inventaire)
+	fmt.Println(p.inventaire)
 }
 
 func (p *personnage) pnjsoin() { // pnj vendeurs qui vend pas
 	p.addInventory("popovie")
 }
 
+func (p *personnage) dead() { //verifie si le perso est mort
+	if p.pvactuel == 0 {
+		fmt.Println(p.nom, ": a succombé(e)")
+		p.pvactuel = p.pvmax * 50 / 100
+	}
+}
 func main() {
 	var p1 personnage
-	p1.init("jackouille", "fripouille", 150, 120, []string{"popovie", "popovie", "poison", "popovie"})
-	p1.popovie()
+	p1.init("jackouille", "fripouille", 150, 50, []string{"popovie", "popovie", "poison", "popovie"})
+	p1.dead()
 	p1.displayInfo()
 	fmt.Println()
 }
