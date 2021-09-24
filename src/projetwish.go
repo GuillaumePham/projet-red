@@ -15,6 +15,11 @@ type personnage struct { //creation d'une classe
 	skill      []string
 	money      int
 }
+type equipement *struct {
+	tête  string
+	torse string
+	pied  string
+}
 
 func (p *personnage) init(nom string, classe string, pvmax int, pvactuel int, niveau int, inventaire []string, skill string, money int) { //initialise des personnages
 	p.nom = nom
@@ -76,9 +81,9 @@ func (p *personnage) accessInventory() { // permet d'affiche le contenu d'un inv
 }
 
 func (p *personnage) removeInventory(itemremove string) { //supprime un objet de l'inventaire d'un personnage
-	for i := 0; i <= len(p.inventaire); i++ {
-		if itemremove == p.inventaire[i] {
-			p.inventaire[i] = ""
+	for j := 0; j < len(p.inventaire); j++ {
+		if itemremove == p.inventaire[j] {
+			p.inventaire[j] = ""
 			break
 		}
 	}
@@ -162,13 +167,18 @@ func (p *personnage) pnj(i int) { // pnj vendeurs qui vend pas
 		p.addInventory("poison")
 		p.money = p.money - 6
 	}
-	if i == 2 && p.addInventory("Livre de Sort: Boule de feu") == false && p.money >= 25 {
-		p.money = p.money - 25
-		fmt.Println("Plus de Place ☺")
+	if i == 2 && p.money >= 25 {
+		if p.addInventory("Livre de Sort: Boule de feu") == true {
+			p.money = p.money - 25
+			p.removeInventory("Livre de Sort: Boule de feu")
+			p.spellBook("Boule de feu")
+		} else {
+			fmt.Println("Plus de Place ☺")
+		}
 
-	} else {
-		//p.removeInventory("Livre de Sort: Boule de feu")
-		p.spellBook("Boule de feu")
+	}
+	{
+
 	}
 
 	if i == 3 && p.money >= 4 {
