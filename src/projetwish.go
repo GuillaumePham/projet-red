@@ -165,10 +165,9 @@ func (p *personnage) pnj(i int) { // pnj vendeurs qui vend pas
 		p.money = p.money - 25
 		fmt.Println("Plus de Place ☺")
 
-	} 
-		//p.removeInventory("Livre de Sort: Boule de feu")
-		p.spellBook("Boule de feu")
 	}
+	//p.removeInventory("Livre de Sort: Boule de feu")
+	p.spellBook("Boule de feu")
 
 	if i == 3 && p.money >= 4 {
 		p.addInventory("Fourrure de loup")
