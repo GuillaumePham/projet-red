@@ -176,8 +176,9 @@ func (p *personnage) menu() {
 		fmt.Println("→ Potion de Livre de Sort Boule de feu  !25 $(Tapez 2)")
 		fmt.Println("→ Fourrure de loup  4$ (Tapez 3")
 		fmt.Println("→ Peau de Troll  7$ (Tapez 4")
-		fmt.Println("→ Peau de Sanglier 3$ (Tapez 5")
+		fmt.Println("→ Peau de Sanglier 3$ (Tapez 5)")
 		fmt.Println("→ Plume de Corbeau 1 $ (Tapez 6) ")
+		fmt.Println("→")
 		fmt.Scan(&marchand)
 		p.pnj((marchand))
 	case "marchand":
@@ -189,45 +190,73 @@ func (p *personnage) menu() {
 		fmt.Println("→ Potion de Livre de Sort Boule de feu  !25 $(Tapez 2)")
 		fmt.Println("→ Fourrure de loup  4$ (Tapez 3")
 		fmt.Println("→ Peau de Troll  7$ (Tapez 4")
-		fmt.Println("→ Peau de Sanglier 3$ (Tapez 5")
+		fmt.Println("→ Peau de Sanglier 3$ (Tapez 5)")
+		fmt.Println("→ Plume de Corbeau 1 $ (Tapez 6) ")
+		fmt.Println("→")
 		fmt.Scan(&marchand)
 		p.pnj((marchand))
 	}
 }
 func (p *personnage) pnj(i int) { // pnj vendeurs qui vend pas
 	if i == 0 && p.money >= 3 {
-		p.addInventory("popovie")
-		p.money = p.money - 3
-	} else if i == 1 && p.money >= 6 {
-		p.addInventory("poison")
-		p.money = p.money - 6
+		if p.addInventory("popovie") == true {
+			p.money = p.money - 3
+		} else {
+			fmt.Println("Plus de Place ☺")
+		}
+	}
+	if i == 1 && p.money >= 6 {
+		if p.addInventory("poison") == true {
+			p.money = p.money - 6
+		} else {
+			fmt.Println("Plus de Place ☺")
+		}
+
 	}
 	if i == 2 && p.money >= 25 {
 		if p.addInventory("Livre de Sort: Boule de feu") == true {
 			p.money = p.money - 25
 			p.removeInventory("Livre de Sort: Boule de feu")
+			fmt.Println("Merci de votre Achat")
 			p.spellBook("Boule de feu")
 		} else {
 			fmt.Println("Plus de Place ☺")
 		}
 	}
 	if i == 3 && p.money >= 4 {
-		p.addInventory("Fourrure de loup")
-		p.money = p.money - 4
+		if p.addInventory("Fourrure de loup") == true {
+			fmt.Println("Merci de votre Achat")
+			p.money = p.money - 4
+		} else {
+			fmt.Println("Plus de Place ☺")
+
+		}
 	}
 	if i == 4 && p.money >= 7 {
-		p.addInventory("Peau de Troll")
-		p.money = p.money - 7
+		if p.addInventory("Peau de Troll") == true {
+			p.money = p.money - 7
+		} else {
+			fmt.Println("Plus de Place ☺")
+
+		}
 	}
 	if i == 5 && p.money >= 3 {
-		p.addInventory("Cuir de Sanglier")
-		p.money = p.money - 3
+		if p.addInventory("Peau de Troll") == true {
+			p.money = p.money - 7
+		} else {
+			fmt.Println("Plus de Place ☺")
+		}
 	}
 	if i == 6 && p.money >= 1 {
-		p.addInventory("Plume de Corbeau")
-		p.money = p.money - 1
+		if p.addInventory("Plume de Corbeau") == true {
+			p.money = p.money - 1
+		} else {
+			fmt.Println("Plus de Place ☺")
+		}
 	}
+
 }
+
 func (p *personnage) forgeron(b int) {
 	var Chapeau string = "Chapeau de l'aventurier" // crée chapeau qui contient Chapeau de l'aventurier
 	var Tunique string = "Tunique de l'aventurier" // crée tunique qui contient tunique de l'aventurier
@@ -326,7 +355,7 @@ func main() {
 	var p1 personnage
 	p1.init("jackouille", "fripouille", 150, 10, 1, []string{"popovie", "poison", "popovie", "popovie", "popovie", "popovie", "popovie", "popovie"}, "coup de point", 100)
 	var p2 personnage
-	p2.init("Cristian ", "Cristian", 150, 1, 1, []string{"poison", "poison", "poison", "poison", "poison", "poison", "poison", "popovie"}, "coup de point", 100)
+	p2.init("Cristian ", "Cristian", 150, 1000, 1, []string{"poison", "poison", "poison", "poison", "poison", "poison", "poison", "popovie"}, "coup de point", 100)
 	//p2.displayInfo()
 	//p2.poison()
 	fmt.Println()
