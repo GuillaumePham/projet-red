@@ -24,7 +24,7 @@ func (p *personnage) init(nom string, classe string, pvmax int, pvactuel int, ni
 	p.pvactuel = pvactuel
 	p.inventaire = inventaire
 	p.skill = []string{"coup de point"}
-	money = 100
+	p.money = money
 }
 func (p *personnage) displayInfo() { // affiche les attribut des personnages
 	fmt.Println("nom:", p.nom)
@@ -33,6 +33,7 @@ func (p *personnage) displayInfo() { // affiche les attribut des personnages
 	fmt.Println("PV:", p.pvactuel)
 	fmt.Println("INVENTAIRE:", p.inventaire)
 	fmt.Println("skill:", p.skill)
+	fmt.Print("Or:", p.money)
 }
 func (p *personnage) popovie() { // soigne le perso
 	if p.pvmax == p.pvactuel { //si le personnage a toutes ses vies il ne peut pas se soigner
@@ -165,9 +166,10 @@ func (p *personnage) pnj(i int) { // pnj vendeurs qui vend pas
 		p.money = p.money - 25
 		fmt.Println("Plus de Place ☺")
 
+	} else {
+		//p.removeInventory("Livre de Sort: Boule de feu")
+		p.spellBook("Boule de feu")
 	}
-	//p.removeInventory("Livre de Sort: Boule de feu")
-	p.spellBook("Boule de feu")
 
 	if i == 3 && p.money >= 4 {
 		p.addInventory("Fourrure de loup")
@@ -193,7 +195,7 @@ func main() {
 	p2.init("Cristian ", "Cristian", 150, 1, 1, []string{"poison", "poison", "poison", "poison", "poison", "poison", "poison", "popovie"}, "coup de point", 100)
 	p1.poison()
 	p1.pnj(5)
-	//p1.displayInfo()
+	p1.displayInfo()
 	//p2.displayInfo()
 	//p2.poison()
 	fmt.Println()
