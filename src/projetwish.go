@@ -5,6 +5,13 @@ import (
 	"time"
 )
 
+type monstre struct {
+	nom      string
+	pvmax    int
+	pvactuel int
+	attaque  int
+}
+
 type personnage struct { //creation d'une classe
 	nom        string
 	classe     string
@@ -17,12 +24,14 @@ type personnage struct { //creation d'une classe
 	equipement equipement
 }
 type equipement struct {
-	tête  string
-	torse string
-	pied  string
+	price      int
+	niveau_min int
+	tête       []string
+	torse      []string
+	pied       []string
 }
 
-func (p *personnage) init(nom string, classe string, pvmax int, pvactuel int, niveau int, inventaire []string, skill string, money int) { //initialise des personnages
+func (p *personnage) init(nom string, classe string, pvmax int, pvactuel int, niveau int, inventaire []string, skill string, money int, price int, niveau_min int, tête []string, torse []string, pied []string) { //initialise des personnages
 	p.nom = nom
 	p.classe = classe
 	p.pvmax = pvmax
@@ -31,6 +40,17 @@ func (p *personnage) init(nom string, classe string, pvmax int, pvactuel int, ni
 	p.inventaire = inventaire
 	p.skill = []string{"coup de point"}
 	p.money = money
+	p.equipement.price = price
+	p.equipement.niveau_min = niveau_min
+	p.equipement.tête = tête
+	p.equipement.torse = torse
+	p.equipement.pied = pied
+}
+func (m *monstre) initmonstre(nom string, pvactuel int, pvmax int, attaque int) {
+	m.nom = nom
+	m.attaque = attaque
+	m.pvactuel = pvactuel
+	m.pvmax = pvmax
 }
 func (p *personnage) displayInfo() { // affiche les attribut des personnages
 	fmt.Println("nom:", p.nom)
@@ -56,7 +76,7 @@ func (p *personnage) popovie() { // soigne le perso
 						fmt.Println(p.nom, ":", p.pvactuel, "/", p.pvmax)
 						break
 					} else {
-						p.pvactuel = p.pvactuel + 50
+						p.pvactuel = p.pvactuel + 5
 						p.removeInventory("popovie")
 						fmt.Println(p.nom, ":", p.pvactuel, "/", p.pvmax)
 						break
@@ -155,18 +175,24 @@ func (p *personnage) menu() {
 	fmt.Println("Tapez Information pour voir les specs(vie,talent...) de votre personnage")
 	fmt.Println("---------------------------------------------------")
 	fmt.Println("Tapez Marchand pour exercer votre Pouvoirs d'achat ")
+	fmt.Println("---------------------------------------------------")
+	fmt.Println("Tapez Combat Pour entrez dans l'arène")
 	fmt.Println()
 	fmt.Print("→")
 	fmt.Scan(&commande)
 	switch commande {
 	case "Information":
 		p.displayInfo()
+		p.menu()
 	case "information":
 		p.displayInfo()
+		p.menu()
 	case "Inventaire":
 		p.accessInventory()
+		p.menu()
 	case "inventaire":
 		p.accessInventory()
+		p.menu()
 	case "Marchand":
 		var marchand int
 		fmt.Println("→ Bienvenue chez Jacquie Farce & Attrape ← ")
@@ -181,6 +207,7 @@ func (p *personnage) menu() {
 		fmt.Println("→")
 		fmt.Scan(&marchand)
 		p.pnj((marchand))
+		p.menu()
 	case "marchand":
 		var marchand int
 		fmt.Println("→ Bienvenue chez Jacquie Farce & Attrape ← ")
@@ -195,12 +222,19 @@ func (p *personnage) menu() {
 		fmt.Println("→")
 		fmt.Scan(&marchand)
 		p.pnj((marchand))
+		p.menu()
+	case "Combat":
+		p.menucombat()
+	case "combat":
+		p.menucombat()
 	}
+
 }
 func (p *personnage) pnj(i int) { // pnj vendeurs qui vend pas
 	if i == 0 && p.money >= 3 {
-		if p.addInventory("popovie") == true {
+		if p.addInventory("popovie") == true { //ajoute l'objet si l'inventaire n'est pas plein
 			p.money = p.money - 3
+			p.displayInfo()
 		} else {
 			fmt.Println("Plus de Place ☺")
 		}
@@ -281,7 +315,7 @@ func (p *personnage) forgeron(b int) {
 				fmt.Println("Vous n'avez plus assez d'agent!!")
 				for c := 0; c < p.money; c++ {
 					if p.money < 5 && c > 1 {
-						fmt.Print("Il te reste ") // donne le nombre de po restant du joueur
+						fmt.Print("Il te reste ") // donne le nombre d'or restant du joueur
 						fmt.Print(c)
 						fmt.Print(" pièces d'or")
 
@@ -351,15 +385,46 @@ func (p *personnage) forgeron(b int) {
 		}
 	}
 }
+func (p *personnage) menucombat() {
+	var combat string
+	fmt.Println("")
+	fmt.Println("Bienvenue Dans L'arène")
+	fmt.Println("---------------------------------------------------")
+	fmt.Println("Tapez: attaque pour Attaquer (inflige des dégat aléatoire")
+	fmt.Println("---------------------------------------------------")
+	fmt.Println("Tapez: Soin pour vous soigner (cela fera passer votre tour)")
+	fmt.Println("---------------------------------------------------")
+	fmt.Println("→")
+	fmt.Scan(&combat)
+
+	switch combat {
+	case "Attaque":
+		//combat
+		p.menu()
+	case "attaque":
+		//combat()
+		p.menu()
+	case "Soin":
+		p.popovie()
+		p.menu()
+	case "soin":
+		p.popovie()
+		p.menu()
+
+	}
+}
 func main() {
 	var p1 personnage
-	p1.init("jackouille", "fripouille", 150, 10, 1, []string{"popovie", "poison", "popovie", "popovie", "popovie", "popovie", "popovie", "popovie"}, "coup de point", 100)
-	var p2 personnage
-	p2.init("Cristian ", "Cristian", 150, 1000, 1, []string{"poison", "poison", "poison", "poison", "poison", "poison", "poison", "popovie"}, "coup de point", 100)
+	p1.init("jackouille", "fripouille", 150, 10, 1, []string{"popovie", "poison", "popovie", "popovie", "popovie", "popovie", "popovie", "popovie"}, "coup de point", 100, 100, 10, []string{"vide"}, []string{"vide"}, []string{"vide"})
+	var m1 monstre
+	m1.initmonstre("Cristian", 100, 150, 5)
+	//var p2 personnage
+	//p2.init("Cristian ", "Cristian", 150, 1000, 1, []string{"poison", "poison", "poison", "poison", "poison", "poison", "poison", "popovie"}, "coup de point", 100)
 	//p2.displayInfo()
 	//p2.poison()
 	fmt.Println()
 
 	p1.menu()
+	p1.menucombat()
 
 }
