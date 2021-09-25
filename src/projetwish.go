@@ -6,10 +6,10 @@ import (
 )
 
 type monstre struct {
-	nom      string
-	pvmax    int
-	pvactuel int
-	attaque  int
+	nom       string
+	pvmax     int
+	pvmonstre int
+	attaque   int
 }
 
 type personnage struct { //creation d'une classe
@@ -22,6 +22,7 @@ type personnage struct { //creation d'une classe
 	skill      []string
 	money      int
 	equipement equipement
+	monstre    monstre
 }
 type equipement struct {
 	price      int
@@ -31,7 +32,7 @@ type equipement struct {
 	pied       []string
 }
 
-func (p *personnage) init(nom string, classe string, pvmax int, pvactuel int, niveau int, inventaire []string, skill string, money int, price int, niveau_min int, tête []string, torse []string, pied []string) { //initialise des personnages
+func (p *personnage) init(nom string, classe string, pvmax int, pvactuel int, niveau int, inventaire []string, skill string, money int, price int, niveau_min int, tête []string, torse []string, pied []string, pvmonstre int) { //initialise des personnages
 	p.nom = nom
 	p.classe = classe
 	p.pvmax = pvmax
@@ -45,11 +46,12 @@ func (p *personnage) init(nom string, classe string, pvmax int, pvactuel int, ni
 	p.equipement.tête = tête
 	p.equipement.torse = torse
 	p.equipement.pied = pied
+	p.monstre.pvmonstre = pvmonstre
 }
-func (m *monstre) initmonstre(nom string, pvactuel int, pvmax int, attaque int) {
+func (m *monstre) initmonstre(nom string, pvmax int, attaque int, pvmonstre int) {
 	m.nom = nom
 	m.attaque = attaque
-	m.pvactuel = pvactuel
+	m.pvmonstre = pvmonstre
 	m.pvmax = pvmax
 }
 func (p *personnage) displayInfo() { // affiche les attribut des personnages
@@ -176,7 +178,7 @@ func (p *personnage) menu() {
 	fmt.Println("---------------------------------------------------")
 	fmt.Println("Tapez Marchand pour exercer votre Pouvoirs d'achat ")
 	fmt.Println("---------------------------------------------------")
-	fmt.Println("Tapez Combat Pour entrez dans l'arène")
+	fmt.Println("Tapez Attaque Pour entrez dans l'arène")
 	fmt.Println()
 	fmt.Print("→")
 	fmt.Scan(&commande)
@@ -223,9 +225,9 @@ func (p *personnage) menu() {
 		fmt.Scan(&marchand)
 		p.pnj((marchand))
 		p.menu()
-	case "Combat":
+	case "Attaque":
 		p.menucombat()
-	case "combat":
+	case "attaque":
 		p.menucombat()
 	}
 
@@ -394,15 +396,17 @@ func (p *personnage) menucombat() {
 	fmt.Println("---------------------------------------------------")
 	fmt.Println("Tapez: Soin pour vous soigner (cela fera passer votre tour)")
 	fmt.Println("---------------------------------------------------")
-	fmt.Println("→")
+	fmt.Print("→")
 	fmt.Scan(&combat)
 
 	switch combat {
 	case "Attaque":
-		//combat
+		p.attack()
+		time.Sleep(3 * time.Second)
 		p.menu()
 	case "attaque":
-		//combat()
+		p.attack()
+		time.Sleep(3 * time.Second)
 		p.menu()
 	case "Soin":
 		p.popovie()
@@ -413,9 +417,15 @@ func (p *personnage) menucombat() {
 
 	}
 }
+func (p *personnage) attack() {
+	p.monstre.pvmonstre = p.monstre.pvmonstre - 10
+	fmt.Println(p.monstre.pvmonstre)
+	time.Sleep(2 * time.Second)
+	fmt.Println(" Cristrian subit une attaque de : ", p.nom)
+}
 func main() {
 	var p1 personnage
-	p1.init("jackouille", "fripouille", 150, 10, 1, []string{"popovie", "poison", "popovie", "popovie", "popovie", "popovie", "popovie", "popovie"}, "coup de point", 100, 100, 10, []string{"vide"}, []string{"vide"}, []string{"vide"})
+	p1.init("jackouille", "fripouille", 150, 10, 1, []string{"popovie", "poison", "popovie", "popovie", "popovie", "popovie", "popovie", "popovie"}, "coup de point", 100, 100, 10, []string{"vide"}, []string{"vide"}, []string{"vide"}, 100)
 	var m1 monstre
 	m1.initmonstre("Cristian", 100, 150, 5)
 	//var p2 personnage
@@ -425,6 +435,5 @@ func main() {
 	fmt.Println()
 
 	p1.menu()
-	p1.menucombat()
 
 }
