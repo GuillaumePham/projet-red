@@ -6,10 +6,11 @@ import (
 )
 
 type monstre struct {
-	nom       string
-	pvmax     int
-	pvmonstre int
-	attaque   int
+	nom             string
+	pvmax           int
+	pvmonstre       int
+	pvmonstreactuel int
+	attaque         int
 }
 
 type personnage struct { //creation d'une classe
@@ -120,23 +121,6 @@ func (p *personnage) addInventory(itemadd string) bool {
 	}
 	return true
 }
-
-/* func (p *personnage) pnj(i int) { // pnj vendeurs qui vend pas
-	if i == 0 {
-		p.addInventory("popovie")
-	} else if i == 1 {
-		p.addInventory("poison")
-	} else {
-		if p.addInventory("Livre de Sort: Boule de feu") == false {
-			fmt.Println(" ! Plus de Place !")
-
-		} else {
-			p.removeInventory("Livre de Sort: Boule de feu")
-			p.spellBook("Boule de feu")
-		}
-	}
-} */
-
 func (p *personnage) dead() { //verifie si le perso est mort
 	if p.pvactuel < 0 {
 		fmt.Println(p.nom, ": a succombé(e)")
@@ -169,6 +153,7 @@ func (p *personnage) spellBook(talentcaché string) { //attribue des compétemce
 }
 func (p *personnage) menu() {
 	var commande string
+	fmt.Println()
 	fmt.Println("☺----- Bienvenue dans Cristian's dungeon -----☺")
 	fmt.Println()
 	fmt.Println("↓----------------------------------------------↓")
@@ -179,21 +164,27 @@ func (p *personnage) menu() {
 	fmt.Println("Tapez Marchand pour exercer votre Pouvoirs d'achat ")
 	fmt.Println("---------------------------------------------------")
 	fmt.Println("Tapez Attaque Pour entrez dans l'arène")
+	fmt.Println("---------------------------------------------------")
+	fmt.Println("Tapez exit pour rage quit")
 	fmt.Println()
 	fmt.Print("→")
 	fmt.Scan(&commande)
 	switch commande {
 	case "Information":
 		p.displayInfo()
+		time.Sleep(3 * time.Second)
 		p.menu()
 	case "information":
 		p.displayInfo()
+		time.Sleep(3 * time.Second)
 		p.menu()
 	case "Inventaire":
 		p.accessInventory()
+		time.Sleep(3 * time.Second)
 		p.menu()
 	case "inventaire":
 		p.accessInventory()
+		time.Sleep(3 * time.Second)
 		p.menu()
 	case "Marchand":
 		var marchand int
@@ -410,11 +401,59 @@ func (p *personnage) menucombat() {
 		p.menu()
 	case "Soin":
 		p.popovie()
+		time.Sleep(5 * time.Second)
 		p.menu()
 	case "soin":
 		p.popovie()
+		time.Sleep(5 * time.Second)
 		p.menu()
 
+	}
+}
+func (p *personnage) charTurn(n int) {
+	fmt.Println("Attaquer :", " Pour Attaquer Tapez 0")
+	fmt.Println("Inventaire :", " Pour ouvire l'Iventaire Tapez 1")
+	for i := 0; i < len(p.skill); i++ {
+		if p.skill[i] == "coup de point" {
+			if n == 0 {
+				p.goblinPattern()
+			} else {
+				for w := 0; w < len(p.inventaire); w++ {
+					if n == 1 {
+						p.accessInventory()
+						// faire en sorte que le joueur utilise un objet et passe sont tours
+						fmt.Println("Pour utiliser une popvie Tapez 2")
+						fmt.Println("Pour utiliser un poisson Tapez 3")
+						if n == 2 && p.inventaire[w] == "popvie" {
+							p.popovie()
+							time.Sleep(2)
+							fmt.Print(p.monstre.nom, " attack ", p.nom, "et lui reste ")
+							p.monstre.attaque = 5
+							p.pvactuel = p.pvactuel - p.monstre.attaque
+							fmt.Print(p.pvactuel)
+							fmt.Print("/")
+							fmt.Print(p.pvmax)
+							fmt.Println(" PDV")
+							fmt.Print("Fin du tour")
+							break
+						}
+						if n == 3 && p.inventaire[w] == "poison" {
+							p.poison()
+							time.Sleep(2)
+							fmt.Print(p.monstre.nom, " attack ", p.nom, "et lui reste ")
+							p.monstre.attaque = 5
+							p.pvactuel = p.pvactuel - p.monstre.attaque
+							fmt.Print(p.pvactuel)
+							fmt.Print("/")
+							fmt.Print(p.pvmax)
+							fmt.Println(" PDV")
+							fmt.Print("Fin du tour")
+							break
+						}
+					}
+				}
+			}
+		}
 	}
 }
 func (p *personnage) attack() {
@@ -422,6 +461,92 @@ func (p *personnage) attack() {
 	fmt.Println(p.monstre.pvmonstre)
 	time.Sleep(2 * time.Second)
 	fmt.Println(" Cristrian subit une attaque de : ", p.nom)
+}
+func (p *personnage) goblinPattern() {
+	var tours = []int{}                      // ont re crée les tours comme avant cela reste les meme
+	p.monstre.nom = "Gobelin d'entrainement" // je nome mon monstre
+	p.monstre.pvmax = 40                     // je lui donne comme pvmax 40pdv
+	p.monstre.attaque = 5
+	p.monstre.pvmonstreactuel = p.monstre.pvmax // et je dit que par default le monstre comme nce avec c'est pv max
+	for i := 0; i < len(tours); i++ {           // comme tout a l'heure pour i partant de zéro est inférieur a len de tours qui est  infinie, j'avance
+		for n := 2; i == n; n += 2 { // a chaque fois que i atteint la valeur de n ont ajoute 2
+			if i != tours[2] || i != tours[n] { // si i est différent de tours[2], soit le troixième tours étant donner que tours[0] == 1, la ont part de zéro et les tours dans un jeu eux commence a 1, soit le premier tour pas de tour zéro
+				fmt.Println(tours[i+1])                                      // ont donne le tours
+				fmt.Print(p.nom, " attack ", p.monstre.nom, "et lui reste ") // le nom du joueurs qui attack le nom du monstre
+				p.attack()                                                   // attack du joueur fait sur le monstre
+				fmt.Print(p.monstre.pvmonstreactuel)                         // et ont print les pv du monstre actuel
+				fmt.Print("/")
+				fmt.Print(p.pvmax)
+				fmt.Println(" PDV")
+				fmt.Print(p.monstre.nom, " attack ", p.nom, "et lui reste ")
+				p.monstre.attaque = 5 // cette foit ci c'est le montre qui attcak
+				p.pvactuel = p.pvactuel - p.monstre.attaque
+				fmt.Print(p.pvactuel)
+				fmt.Print("/")
+				fmt.Print(p.monstre.pvmax)
+				fmt.Println(" PDV")
+				if i == 0 {
+					fmt.Print("Fin du tour ")
+					fmt.Println(tours[i+1]) // i +1 car tours part de zéro, pour dire fin du tour 1
+				} else if i >= 1 {
+					fmt.Print("Fin du tour ")
+					fmt.Println(tours[i+1])
+					break
+				}
+			} else {
+				if i == tours[2] || i == tours[n] {
+					fmt.Println(tours[i+1])
+					fmt.Print(p.nom, " attack ", p.monstre.nom, "et lui reste ")
+					p.attack()
+					fmt.Print(p.monstre.pvmonstreactuel)
+					fmt.Print("/")
+					fmt.Print(p.pvmax)
+					fmt.Println(" PDV")
+					fmt.Print(p.monstre.nom, " attack ", p.nom, "et lui reste ")
+					p.monstre.attaque *= 2
+					p.pvactuel = p.pvactuel - p.monstre.attaque
+					fmt.Print(p.pvactuel)
+					fmt.Print("/")
+					fmt.Print(p.monstre.pvmax)
+					fmt.Println(" PDV")
+					if i == 0 {
+						fmt.Print("Fin du tour ")
+						fmt.Println(tours[i+1])
+					} else {
+						fmt.Print("Fin du tours ")
+						fmt.Println(tours[i+1])
+						break
+					}
+				}
+			}
+		}
+	}
+}
+
+func (p *personnage) upgradeInventorySlot(r int) {
+	var upgrade = [10]string{}
+	var z int
+	for i := 0; i < len(p.inventaire); i++ {
+		if p.inventaire[i] == "Augmentation d'inventaire" {
+			if len(p.inventaire) < 40 { // si l'inventaire n'est pas égale a 40
+				if r == 0 { // et qu'il renvoie 0
+					p.inventaire = append(p.inventaire, upgrade[z]) // et on ajoute a l'inventaire une upgrade
+					p.removeInventory("Augmentation d'inventaire")
+				}
+			}
+		} else if len(p.inventaire) >= 40 {
+			fmt.Println("Vous ne pouvez plus agrandire votre inventaire")
+		}
+	}
+	if len(p.inventaire) > 10 && len(p.inventaire) <= 20 {
+		fmt.Println("Tu peut encore utilisé 2 Augmentation d'inventaire")
+	}
+	if len(p.inventaire) > 20 && len(p.inventaire) <= 30 {
+		fmt.Println("Tu peut encore utilisé 1 Augmentation d'inventaire")
+	}
+	if len(p.inventaire) > 30 && len(p.inventaire) <= 40 {
+		fmt.Println("Tu ne peut plus utiliser d'Augmentation d'inventaire")
+	}
 }
 func main() {
 	var p1 personnage
