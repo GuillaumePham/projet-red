@@ -5,6 +5,10 @@ import (
 	"time"
 )
 
+var m1 monstre
+var tour int = 0
+var comptetour int = 0
+
 type personnage struct { //creation d'une classe
 	nom        string
 	classe     string
@@ -31,13 +35,14 @@ type monstre struct {
 	pvmonstreactuel int
 }
 
-func (p *personnage) init(nom string, classe string, pvmax int, pvactuel int, niveau int, inventaire []string, skill string) { //initialise des personnages
+func (p *personnage) init(nom string, money int, classe string, pvmax int, pvactuel int, niveau int, inventaire []string, skill string) { //initialise des personnages
 	p.nom = nom
 	p.classe = classe
 	p.pvmax = pvmax
 	p.niveau = niveau
 	p.pvactuel = pvactuel
 	p.inventaire = inventaire
+	p.money = money
 	p.skill = []string{"coup de point"}
 }
 func (b *equipement) init(price int, niveau_min int, tête string, torse string, pied string) {
@@ -184,7 +189,7 @@ func (p *personnage) displayInfo() { // affiche les attribut des personnages
 
 func (p *personnage) popovie() { // soigne le perso
 	if p.pvmax == p.pvactuel { //si le personnage a toutes ses vies il ne peut pas se soigner
-		fmt.Print("tu a deja toutes tes vies")
+		fmt.Println("tu a deja toutes tes vies")
 	} else {
 		if len(p.inventaire) == 0 { //si l'inventaire du personnage est vide il peut pas se soigner
 			fmt.Print("ton inventaire est vide")
@@ -203,7 +208,7 @@ func (p *personnage) popovie() { // soigne le perso
 						break
 					}
 				} else {
-					fmt.Println("Plus de popo")
+					fmt.Println()
 				}
 			}
 		}
@@ -240,17 +245,6 @@ func (p *personnage) addInventory(itemadd string) bool {
 	return true
 }
 
-/*func (p *personnage) addInventory(itemadd string) {
-	var max_inventaire = [10]string{}             // ont fait un string qui comporte maximum 10 valeur a l'intérieur
-	if len(p.inventaire) == len(max_inventaire) { // si le nombre d'ojet dans p.inventaire vaut plus que 10 ont renvoie l'inventaire est plein
-		fmt.Println("inventaire plein")
-	} else {
-		if len(p.inventaire) <= len(max_inventaire) { // sinon si p.inventaire est inférieur ou égale a 10
-			p.inventaire = append(p.inventaire, itemadd) // ont ajoute dans l'inventaire du personnage un nouvelle item pour l'istant inconnue
-			fmt.Println(p.inventaire)                    // ont print l'inventaire
-		}
-	}
-} */
 func (p *personnage) Compteuritems(item_into_inventory string) { //juste du bonus  pour dire combien d'item x tu as dans ton inventaire si demmander
 	item_into_inventory = ""
 	for i := 0; i < len(p.inventaire); i++ {
@@ -261,12 +255,16 @@ func (p *personnage) Compteuritems(item_into_inventory string) { //juste du bonu
 		}
 	}
 }
-func (p *personnage) attack() {
-	p.monstre.pvmonstreactuel = p.monstre.pvmonstreactuel - 10
-	fmt.Println(p.monstre.pvmonstreactuel)
+func (p *personnage) attack(m *monstre) {
+	m.pvmonstreactuel = m.pvmonstreactuel - 10
+	fmt.Println(m.pvmonstreactuel, "/", m.pvmax)
+	time.Sleep(2 * time.Second)
+	m.Mdead()
 	time.Sleep(2 * time.Second)
 	fmt.Println(" Cristrian subit une attaque de : ", p.nom)
 }
+
+//}
 func (p *personnage) menucombat() {
 	var combat string
 	fmt.Println("")
@@ -281,22 +279,19 @@ func (p *personnage) menucombat() {
 
 	switch combat {
 	case "Attaque":
-		p.attack()
+		p.attack(&m1)
 		time.Sleep(3 * time.Second)
-		p.goblinPattern()
-		p.menu()
-
+		p.TrainingFight(&m1)
 	case "attaque":
-		p.attack()
+		p.attack(&m1)
 		time.Sleep(3 * time.Second)
-		p.goblinPattern()
-		p.menu()
+		p.TrainingFight(&m1)
 	case "Soin":
 		p.popovie()
-		p.menu()
+		p.TrainingFight(&m1)
 	case "soin":
 		p.popovie()
-		p.menu()
+		p.TrainingFight(&m1)
 
 	}
 }
@@ -389,9 +384,9 @@ func (p *personnage) menu() {
 		p.menu()
 	case "Forgeron":
 		var forgeron int
-		fmt.Println("Pour craft le Chapeau de l'aventurier" + " écriver 0")
-		fmt.Println("Pour craft la Tunique de l'aventurier" + " écriver 1")
-		fmt.Println("Pour craft les Bottes de l'aventurier" + " écriver 2")
+		fmt.Println("Pour craft le Chapeau de l'aventurier" + " écrivez 0")
+		fmt.Println("Pour craft la Tunique de l'aventurier" + " écrivez 1")
+		fmt.Println("Pour craft les Bottes de l'aventurier" + " écrivez 2")
 		fmt.Scan(&forgeron)
 		p.forgeron((forgeron))
 		p.menu()
@@ -399,7 +394,119 @@ func (p *personnage) menu() {
 		var exit string
 		fmt.Scan(&exit)
 	}
-	p.menu()
+}
+
+func (p *personnage) dead() bool { //verifie si le perso est mort
+	if p.pvactuel <= 0 {
+		fmt.Println(p.nom, ": a succombé(e)")
+		fmt.Println("Défaite")
+		p.pvactuel = p.pvmax * 50 / 100
+		p.menu()
+		return true
+	} else {
+		return false
+	}
+
+}
+func (m *monstre) Mdead() bool { //verifie si le monstre est mort
+	if m.pvmonstreactuel <= 0 {
+		fmt.Println(m.nom, ": a succombé(e)")
+		fmt.Println("C'est gagné")
+		m.pvmonstreactuel = m.pvmax * 50 / 100
+		return true
+	} else {
+		return false
+	}
+
+}
+func (p *personnage) charCreation(test string, s rune) {
+	var result = []byte{}
+	for i := 0; i >= 'A' && i <= 'Z'; i++ { // i commence a zéro et fera le tours de A a Z seulement ne dépassera pas
+		if !(p.nom[0] == test[i]) { // si la premier caractère de p.nom n'appartient pas a test[i]qui comprend toutes les majuscules
+			fmt.Println("il faut une majuscule en première lettre") // revoyez un message de prévention
+		} else {
+			result = append(result, p.nom[0]) // sinon on ajoute la première valeur de p.nom qui est une majuscule dans result qui était vide jusqu'a maintenant
+		}
+	}
+	for compteur := 0; compteur < len(p.nom); compteur++ { // je crée un compteur qui part de zéro et ajoute plus 1 temp que compteur n'est pas plus grand que p.nom
+		for b := 0; b >= 'a' && b <= 'z'; b++ { // b commence a zéro et fera le tours de a a z seulement ne dépassera pas
+			if !(p.nom[1+compteur] == test[b]) { // si lettre n'est pas comprit entre A et Z renvoie "il faut une majuscule en première lettre"
+				fmt.Println("seulement la première lettre doit etre en majuscule, il faut une minuscule")
+			} else {
+				result = append(result, p.nom[1+compteur])
+			}
+		}
+	}
+	var Classe2 = [4]string{"Humain", "Elfe", "Nain", "Cristian"}
+	for i := 0; i < len(Classe2); i++ {
+	}
+}
+func (p *personnage) spellBook(talentcaché string) { //attribue des compétemces en fonctions des livres achetés
+	for i := 0; i < len(p.skill); i++ {
+		if p.skill[i] == talentcaché {
+			fmt.Println("Tu possédes déjà ce talent")
+			break
+		} else {
+			p.skill = append(p.skill, talentcaché)
+			break
+		}
+	}
+}
+func (p *personnage) forgeron(b int) {
+	if p.money == 0 {
+		fmt.Println("vous n'avez plus d'argent sur vous!")
+	}
+	for i := 0; i < len(p.inventaire); i++ {
+		if b == 0 && p.money >= 5 {
+			if p.inventaire[i] == "Plume de Corbeau" {
+				if p.inventaire[i] == "Cuir de Sanglier" {
+					p.removeInventory("Plume de Corbeau")
+					p.removeInventory("Cuir de Sanglier")
+					p.money = p.money - 5
+					p.addInventory("Chapeau de l'aventurier")
+				}
+			}
+		}
+		if b == 1 && p.money >= 5 {
+			time.Sleep(3 * time.Second)
+			fmt.Print("Marche")
+			if p.inventaire[i] == "Fourrure de loup" {
+				if p.inventaire[i] == "Peau de Troll" {
+					p.removeInventory("Fourrure de loup")
+					p.removeInventory("Fourrure de loup")
+					p.removeInventory("Peau de Troll")
+					p.money = p.money - 5
+					p.addInventory("Tunique de l'aventurier")
+
+				}
+			}
+		}
+		if b == 2 && p.money >= 5 {
+			if p.inventaire[i] == "Fourrure de loup" {
+				if p.inventaire[i] == "Peau de Troll" {
+					p.removeInventory("Fourrure de loup")
+					p.removeInventory("Cuir de Sanglier")
+					p.money = p.money - 5
+					p.addInventory("Bottes de l'aventurier")
+				}
+			} else if p.money < 5 {
+				fmt.Println("Vous n'avez plus assez d'agent!!")
+			}
+		}
+	}
+}
+func (p *personnage) poison() { // retire 30 hp aux personnages
+	for i := 0; i <= 3; i++ {
+		time.Sleep(1 * time.Second)
+		fmt.Println(p.nom, ":", p.pvactuel)
+		p.pvactuel = p.pvactuel - 10
+		if p.pvactuel < 0 {
+			time.Sleep(1 * time.Second)
+			p.dead()
+			break
+		}
+
+	}
 }
 func (p *personnage) pnj(i int) { // pnj vendeurs qui vend pas
 	if i == 0 && p.money >= 3 {
@@ -465,278 +572,44 @@ func (p *personnage) pnj(i int) { // pnj vendeurs qui vend pas
 		}
 	}
 }
-func (p *personnage) dead() { //verifie si le perso est mort
-	if p.pvactuel < 0 {
-		fmt.Println(p.nom, ": a succombé(e)")
-		p.pvactuel = p.pvmax * 50 / 100
-	}
-}
-func (p *personnage) charCreation(test string, s rune) {
-	var result = []byte{}
-	for i := 0; i >= 'A' && i <= 'Z'; i++ { // i commence a zéro et fera le tours de A a Z seulement ne dépassera pas
-		if !(p.nom[0] == test[i]) { // si la premier caractère de p.nom n'appartient pas a test[i]qui comprend toutes les majuscules
-			fmt.Println("il faut une majuscule en première lettre") // revoyez un message de prévention
-		} else {
-			result = append(result, p.nom[0]) // sinon on ajoute la première valeur de p.nom qui est une majuscule dans result qui était vide jusqu'a maintenant
-		}
-	}
-	for compteur := 0; compteur < len(p.nom); compteur++ { // je crée un compteur qui part de zéro et ajoute plus 1 temp que compteur n'est pas plus grand que p.nom
-		for b := 0; b >= 'a' && b <= 'z'; b++ { // b commence a zéro et fera le tours de a a z seulement ne dépassera pas
-			if !(p.nom[1+compteur] == test[b]) { // si lettre n'est pas comprit entre A et Z renvoie "il faut une majuscule en première lettre"
-				fmt.Println("seulement la première lettre doit etre en majuscule, il faut une minuscule")
-			} else {
-				result = append(result, p.nom[1+compteur])
-			}
-		}
-	}
-	var Classe2 = [4]string{"Humain", "Elfe", "Nain", "Cristian"}
-	for i := 0; i < len(Classe2); i++ {
-	}
-}
-func (p *personnage) spellBook(talentcaché string) { //attribue des compétemces en fonctions des livres achetés
-	for i := 0; i < len(p.skill); i++ {
-		if p.skill[i] == talentcaché {
-			fmt.Println("Tu possédes déjà ce talent")
-			break
-		} else {
-			p.skill = append(p.skill, talentcaché)
-			break
-		}
-	}
-}
-func (p *personnage) forgeron(b int) {
-	var Chapeau string = "Chapeau de l'aventurier" // crée chapeau qui contient Chapeau de l'aventurier
-	var Tunique string = "Tunique de l'aventurier" // crée tunique qui contient tunique de l'aventurier
-	var Bottes string = "Bottes de l'aventurier"   // crée bottes qui contient bottes de l'aventurier
-	fmt.Println("Pour craft le Chapeau de l'aventurier" + " écriver 0")
-	fmt.Println("Pour craft la Tunique de l'aventurier" + " écriver 1")
-	fmt.Println("Pour craft les Bottes de l'aventurier" + " écriver 2")
-	fmt.Print("→")
-	if p.money == 0 {
-		fmt.Println()
-		fmt.Println("vous n'avez plus d'argent sur vous!")
-	}
-	for i := 0; i <= len(p.inventaire); i++ {
-		if b == 0 && p.money >= 5 {
-			if p.inventaire[i] == "Plume de Corbeau" {
-				if p.inventaire[i] == "Cuir de Sanglier" {
-					p.removeInventory("Plume de Corbeau")
-					p.removeInventory("Cuir de Sanglier")
-					p.money = p.money - 5
-					p.addInventory(Chapeau)
-				}
-			} else if p.money < 5 {
-				fmt.Println("Vous n'avez plus assez d'agent!!")
-				for c := 0; c < p.money; c++ {
-					if p.money < 5 && c > 1 {
-						fmt.Print("Il te reste ") // donne le nombre de po restant du joueur
-						fmt.Print(c)
-						fmt.Print(" pièces d'or")
-
-					} else if p.money < 5 && c <= 1 {
-						fmt.Print("Il te reste ")
-						fmt.Print(c)
-						fmt.Print(" pièce d'or")
-					}
-				}
-			} else {
-				fmt.Println("Il vous manque un item pour craft")
-				break
-			}
-		}
-
-		//if Tunique && p.money >= 5 && p.inventaire[i+2] == "Fourrure de loup" && p.inventaire[i] == "Peau de Troll" {
-		if b == 1 && p.money >= 5 {
-			if p.inventaire[i] == "Fourrure de loup"+"Fourrure de loup" {
-				if p.inventaire[i] == "Peau de Troll" {
-					p.removeInventory("Fourrure de loup" + "Fourrure de loup")
-					p.removeInventory("Peau de Troll")
-					p.money = p.money - 5
-					p.addInventory(Tunique)
-				}
-			} else if p.money < 5 {
-				fmt.Println("Vous n'avez plus assez d'agent!!")
-				for c := 0; c < p.money; c++ {
-					if p.money < 5 && c > 1 {
-						fmt.Print("Il te reste ") // donne le nombre de po restant du joueur
-						fmt.Print(c)
-						fmt.Print(" pièces d'or")
-
-					} else if p.money < 5 && c <= 1 {
-						fmt.Print("Il te reste ")
-						fmt.Print(c)
-						fmt.Print(" pièce d'or")
-					}
-				}
-			} else {
-				fmt.Println("Il vous manque un item pour craft")
-				break
-			}
-		}
-		if b == 2 && p.money >= 5 {
-			if p.inventaire[i] == "Fourrure de loup" {
-				if p.inventaire[i] == "Peau de Troll" {
-					p.removeInventory("Fourrure de loup")
-					p.removeInventory("Cuir de Sanglier")
-					p.money = p.money - 5
-					p.addInventory(Bottes)
-				}
-			} else if p.money < 5 {
-				fmt.Println("Vous n'avez plus assez d'agent!!")
-				for c := 0; c < p.money; c++ {
-					if p.money < 5 && c > 1 {
-						fmt.Print("Il te reste ") // donne le nombre de po restant du joueur
-						fmt.Print(c)
-						fmt.Print(" pièces d'or")
-
-					} else if p.money < 5 && c <= 1 {
-						fmt.Print("Il te reste ")
-						fmt.Print(c)
-						fmt.Print(" pièce d'or")
-					}
-				}
-			} else {
-				fmt.Println("Il vous manque un item pour craft")
-				break
-			}
-		}
-	}
-}
-func (p *personnage) poison() { // retire 30 hp aux personnages
-	for i := 0; i <= 3; i++ {
-		time.Sleep(1 * time.Second)
-		fmt.Println(p.nom, ":", p.pvactuel)
-		p.pvactuel = p.pvactuel - 10
-		if p.pvactuel < 0 {
-			time.Sleep(1 * time.Second)
-			p.dead()
-			break
-		}
-
-	}
-}
-func (p *personnage) goblinPattern() {
-	fmt.Println("Rien")
-}
-
-/* var m1 monstre
-	for i := 0; i < len(tours); i++ { // comme tout a l'heure pour i partant de zéro est inférieur a len de tours qui est  infinie, j'avance
-		for n := 2; i == n; n += 2 { // a chaque fois que i atteint la valeur de n ont ajoute 2
-			if i != tours[2] || i != tours[n] { // si i est différent de tours[2], soit le troixième tours étant donner que tours[0] == 1, la ont part de zéro et les tours dans un jeu eux commence a 1, soit le premier tour pas de tour zéro
-				fmt.Println(tours[i+1])
-				p.menucombat()
-				fmt.Print(m1.pvmonstreactuel)
-				fmt.Print("/")
-				fmt.Print(p.pvmax)
-				fmt.Println(" PDV")
-				time.Sleep(2)
-				fmt.Print(m1.nom, " attaque ", p.nom, "et lui reste ")
-				m1.attaque = 5 // cette fois ci c'est le monstre qui attaque
-				p.pvactuel = p.pvactuel - m1.attaque
-				fmt.Print(p.pvactuel)
-				fmt.Print("/")
-				fmt.Print(m1.pvmonstreactuel)
-				fmt.Println(" PDV")
-				if i == 0 {
-					fmt.Print("Fin du tour ")
-					fmt.Println(tours[i+1]) // i +1 car tour part de zéro, pour dire fin du tour 1
-				} else if i >= 1 {
-					fmt.Print("Fin du tour ")
-					fmt.Println(tours[i+1])
-					break
-				}
-			} else {
-				if i == tours[2] || i == tours[n] {
-					fmt.Println(tours[i+1])
-					p.menucombat()
-					fmt.Print(m1.pvmonstreactuel)
-					fmt.Print("/")
-					fmt.Print(p.pvmax)
-					fmt.Println(" PDV")
-					time.Sleep(2)
-					fmt.Print(m1.nom, " attaque ", p.nom, "et lui reste ")
-					p.monstre.attaque *= 2
-					p.pvactuel = p.pvactuel - p.monstre.attaque
-					fmt.Print(p.pvactuel)
-					fmt.Print("/")
-					fmt.Print(p.monstre.pvmax)
-					fmt.Println(" PDV")
-					if i == 0 {
-						fmt.Print("Fin du tour ")
-						fmt.Println(tours[i+1])
-					} else {
-						fmt.Print("Fin du tours ")
-						fmt.Println(tours[i+1])
-						break
-					}
-				}
-			}
-		}
-	}
-} */
-
-/* func (p *personnage) charTurn(n int) {
-	fmt.Println("Attaquer :", " Pour Attaquer Tapez 0")
-	fmt.Println("Inventaire :", " Pour ouvire l'Iventaire Tapez 1")
-	for i := 0; i < len(p.skill); i++ {
-		if p.skill[i] == "coup de point" {
-			if n == 0 {
-				p.goblinPattern()
-			} else {
-				for w := 0; w < len(p.inventaire); w++ {
-					if n == 1 {
-						p.accessInventory()
-						// faire en sorte que le joueur utilise un objet et passe sont tours
-						fmt.Println("Pour utiliser une popvie Tapez 2")
-						fmt.Println("Pour utiliser un poison Tapez 3")
-						if n == 2 && p.inventaire[w] == "popvie" {
-							p.popovie()
-							time.Sleep(2)
-							fmt.Print(p.monstre.nom, " attack ", p.nom, "et lui reste ")
-							p.monstre.attaque = 5
-							p.pvactuel = p.pvactuel - p.monstre.attaque
-							fmt.Print(p.pvactuel)
-							fmt.Print("/")
-							fmt.Print(p.pvmax)
-							fmt.Println(" PDV")
-							fmt.Print("Fin du tour")
-							break
-						}
-						if n == 3 && p.inventaire[w] == "poison" {
-							p.poison()
-							time.Sleep(2)
-							fmt.Print(p.monstre.nom, " attack ", p.nom, "et lui reste ")
-							p.monstre.attaque = 5
-							p.pvactuel = p.pvactuel - p.monstre.attaque
-							fmt.Print(p.pvactuel)
-							fmt.Print("/")
-							fmt.Print(p.pvmax)
-							fmt.Println(" PDV")
-							fmt.Print("Fin du tour")
-							break
-						}
-					}
-				}
-			}
-		}
-		if p.pvactuel <= 0 {
-			p.dead()
-		} else {
-			if p.monstre.pvmonstreactuel == 0 {
-				fmt.Println(p.monstre.nom, " a perdue contre ", p.nom)
-				fmt.Println("Fin du combat !")
-				break
-			}
-		}
-	}
-	p.menu()
-} */
 
 func main() {
 	var p1 personnage
-	p1.init("jackouille", "fripouille", 150, 10, 1, []string{"popovie", "poison", "popovie", "popovie", "popovie", "popovie", "popovie", "popovie"}, "coup de point")
-	p1.menu()
-	var m1 monstre
 	m1.initmonstre("Cristian", 40, 40, 5)
+	p1.init("jackouille", 100, "fripouille", 150, 10, 1000, []string{"Fourrure de loup", "Fourrure de loup", "Peau de Troll", "popovie", "popovie", "popovie", "popovie"}, "coup de point")
+	p1.menu()
 
+}
+
+func (p *personnage) TrainingFight(m *monstre) {
+	if p.pvactuel <= 0 || m.pvmonstreactuel <= 0 {
+		tour++
+	} else {
+		if comptetour == 2 {
+			m.attaque = 5 * 200 / 100
+			p.pvactuel = p.pvactuel - m.attaque
+			fmt.Println(p.nom, "subit une attaque de", m.nom)
+			time.Sleep(3 * time.Second)
+			fmt.Println(p.pvactuel, "/", p.pvmax)
+			comptetour = 0
+			if p.dead() == true {
+				fmt.Println("Aie")
+			} else {
+				p.menu()
+			}
+		} else {
+			p.pvactuel = p.pvactuel - m.attaque
+			fmt.Println(p.nom, "subit une attaque de", m.nom)
+			time.Sleep(3 * time.Second)
+			fmt.Println(p.pvactuel, "/", p.pvmax)
+			fmt.Println()
+			time.Sleep(3 * time.Second)
+			comptetour++
+			if p.dead() == true {
+				fmt.Println("Aie")
+			} else {
+				p.menu()
+			}
+		}
+	}
 }
