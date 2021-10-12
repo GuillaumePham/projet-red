@@ -1,0 +1,104 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1036{\fonttbl{\f0\fnil\fcharset0 Calibri;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\f0\fs22\lang12 RPG r\'e9partition des T\'e2che :\par
+T\'e2che 1:  Guillaume (Principalement en tout cas pour la cr\'e9ation) ajouts des deux\par
+T\'e2che 2:  Les Deux\par
+T\'e2che 3: Les Deux\par
+T\'e2che 4: Guillaume\par
+T\'e2che 5: Quentin\par
+T\'e2che 6: Guillaume\par
+T\'e2che 7: Guillaume\par
+T\'e2che 8: Guillaume\par
+T\'e2che 9: Guillaume\par
+optionnel 1.1 : Quentin\par
+optionnel 1.2 : Guillaume et Quentin\par
+T\'e2che 10: Guillaume\par
+T\'e2che 11: Quentin\par
+T\'e2che 12:  Quentin\par
+T\'e2che 13:  Quentin\par
+T\'e2che 14:  Quentin\par
+T\'e2che 15: Quentin\par
+optionnel 2.1 : Quentin\par
+T\'e2che 16: Guillaume\par
+T\'e2che 17: Guillaume\par
+T\'e2che 18: Les Deux\par
+T\'e2che 19: Les Deux\par
+T\'e2che 20: Guillaume\par
+optionnel 3 : Quentin\par
+optionnel 4 : Guillaume\par
+optionnel 5.1 : Quentin\par
+optionnel 5.2 : Quentin\par
+--------------------------------------------------------------------------------------------------------------------------\par
+T\'e2che Guillaume :\par
+T\'e2che 1 et 2 :\par
+Menu assez compliqu\'e9 ne connaissez par les switch apr\'e8s avoir comprit c'est allez plus vite, apr\'e8s il y'a eu des ajouts au fur et a mesure entre nous deux quand ont cr\'e9e une nouvelle fonction la plus part du temp ont l'incr\'e9menter dans le menu\par
+r\'e9alis\'e9 chacun de notre c\'f4t\'e9, aucun probl\'e8me des deux c\'f4t\'e9\par
+T\'e2che 3 :\par
+init du personnage, programtion objets assez facile, juste le temp de r\'e9flexion comment le structurer la premi\'e8re fois, le monstre et invocation ce base sur le m\'eame principe\par
+T\'e2che 6 :\par
+potion de vie, assez compliquer, plusieurs erreur au d\'e9but du programme ou la potion de vie continuer a s'ajouter, et d\'e9passer la vie max, car la potion de vie rajoute 20 par d\'e9fault, le fait que les pvactuel d\'e9pass\'e9 les pvmax\par
+T\'e2che 7 : \par
+La cr\'e9ation du marchand v1 et de la potion de vie gratuit, si il y'a assez de place libre dans l'inventaire et limit\'e9 1fois gratuit (en +, apr\'e8s elle n'\'e9tait plus disponible ont ne la pas garder quand ont a ajout\'e9 la money)\par
+T\'e2che 8 :\par
+wasted, la mort du joueur et aussi  du montre ont \'e9tait r\'e9alis\'e9 par Guillaume mise a part certain ajo\'fbt pour les loot du mob lors de \'e7a mort, impl\'e9mentation de ces condition, pour dire que si l'un des deux est vrai dans menucombat, le combat s'arr\'eate et annonce le gagnant, le joueur respawn avec la moti\'e9 de ces pvmax, et le monstre lui respawn avec tous c'est pv pour pouvir le re affronter \par
+T\'e2che 9 :\par
+poison, similaire a potion de vie, ou la il retire 10 pv toutes les seconde 3 fois, cette fois ont ajoute pas mais on retire des pv\par
+T\'e0che 10 : \par
+skill, et spellbook pour ajouter un sort plus facilement dans skill qui est un argument ajout\'e9 dans la structure personnage par d\'e9fault elle a un coup de poing qui fait 10 de d\'e9gats\par
+T\'e2che 16 -17 (18 -19 retravailler par rapport a celui de Quentin pour l'incr\'e9menter dans trainingfight) -20 :\par
+cr\'e9ation de nouvelle structure monstre, de sont attack pattern, cr\'e9ation d'un menu combat avec plsusieur choix diff\'e9rent dans le combat acc\'e8s a l'inventaire, utilisation de potion de vie attaquer ou bien quitter le combat sisouhaitez, les partern sont ensuite ajouter dans le menucombat qui \'e9tait assez compliquer a mettre en place\par
+----------------------------------------------------------------------------------------------------------------------\par
+T\'e2che classique Quentin :\par
+T\'e2che 1 et 2: \par
+Menu Guillaume\par
+r\'e9alis\'e9 chacun de notre c\'f4t\'e9, aucun probl\'e8me des deux c\'f4t\'e9\par
+T\'e2che 5:\par
+accessInvotory, tr\'e8s facile principalement du print pour faire jolie pas grand chose a faire, beaucoup de modification ont \'e9tait ajout\'e9 ont peut maintenant aussi  supprimer un item dans l'inventaire\par
+T\'e2che 11 :\par
+Money, assez facile ont incr\'e9mente un nouvelle attribut a la struct personnage et dans l'init, ont d\'e9marre avec 100 PO au personnage tr\'e8s utile pour l'ach\'e2t via le marchand \par
+T\'e2che 12:\par
+Marchand V2, j'ai  implementer des prix et des nouveau item, pouvant s'ajouter a l'inventaire, si l'inventaire n'st pas complet, si l'argent est suffisant sinon il ne peut pas et re\'e7oit un message d'erreur li\'e9 au probl\'e8me.\par
+T\'e2che 13:\par
+Forgeron, cr\'e9e un nouvel item, contre des ressources pr\'e9ente dans l'inventaire et les supprime, pour ajout\'e9 l'item, "chapeau de l'aventurier", "Tunique de l'aventurier" et "Bottes de l'aventurier"\par
+T\'e2che 15 :\par
+\'e9quipement, mais aussi d\'e9s\'e9quiper, d\'e9s\'e9quipe si tete ou jambe ou encore pieds n'est pas vide si ont veut mettre un autre chapeau par exemple, cela le remplace retire l'item de dans t\'eate ou autre qui ont \'e9tait ajout\'e9 dans la struct du personnage et ajo\'fbte un bonus en fonction de l'item, ne supprime aucun item s'il t\'eate n'est pas vide juste le remplace aussi non s'il est vide ajoute l'item tous simplement et le supprime de l'inventaire tout en ajoutant des effets si \'e9quiper\par
+T\'e2che 18 et 19 :\par
+r\'e9alis\'e9 par moi mais retravaill\'e9 par Guillaume pour mieu correspondre au programme, vue que a ce moment la ont avait toujours notre strcut et init fait de notre c\'f4t\'e9 il a fallu que Guillaume retravaille mon script pour correspondre au sien au finale ont c'est mis d'accord de ce mettre uniquement sur sont code pour \'e9viter les probl\'e8me, futur. Mais dans \'e7a globalit\'e9 pas de probl\'e8me notable, je suis parfois rester plusieurs heure bloquer sur un exercice, pour rien, maintenant je me lance dans les optionel et je suis vraiment a fond. (mon code perso de la t\'e2che 18 et 19, doivent toujours rester en incr\'e9mentation dans le code)\par
+---------------------------------------------------------------------------------------------------------------------\par
+Optionel c\'f4t\'e9 Quentin et Guillaume:\par
+Charcreation:\par
+Charcreation, j'ai cr\'e9e une fonction charcreation, ou j'ai eu quelque probl\'e8me li\'e9 a al convertion des minuscule en majuscule, j'avais cr\'e9e une fonction qui prenait bien en compte le premier index du string en majuscule mais le probl\'e8me c'est qu si c'\'e9tait une minuscule, il cr\'e9e la majuscule et ajout\'e9 la m\'eame lettre en minuscule\par
+exemple:\par
+"t"\par
+revenyez :\par
+"Tt"\par
+le probl\'e8me \'e9tait qu'il dupliquer 2fois mon texte, pour r\'e9gler ce probl\'e8me j'ai cr\'e9e une variable string qui appara\'eetra dans le menu, pour le choix du nom, est un compteur qui part a partir de 1, et s'ajoutera temp qu'il est inf\'e9rieur a la taille du string. Faire cette m\'e9thode ma permis de r\'e9gler mon probl\'e8me, pour la cr\'e9ation de classe avec leurs sp\'e9cificit\'e9 j'ai eu aucun mal.\par
+UpgradeInventory:\par
+Par d\'e9fault j'ai eu un souci car dans addInventory p.inventaire ne pouvez pas d\'e9passez 10, pour pallier a \'e7a, j'ai une variable externe a la fonction pour que je puissa la retravailler a ma guisse, comme \'e7a la variable pouvais prendre une valeur diff\'e9rente si une augmentation d'inventaire \'e9tait utiliser s+=10 ou s vaut par default  == 10.\par
+Initiative :\par
+je n'est pas trop eu de mal j'ai du ajouter au struct monstre et personnage et a leurs init un string nomm\'e9 initiative puis j'ai dit dans le menucombat r\'e9aliser par Guillaume, que en fonction de l'initiative le joueur ou le monstre commence a attaquer\par
+exp\'e9rience :\par
+R\'e9aliser par Guillaume et quelque ajout par quantin pour la cr\'e9ation de sort sp\'e9ciaux, l'xp requis est 2 fois ^plus important chaque level passer.\par
+Combat magique et ressource mana:\par
+cr\'e9e sur notre programme en temp que chosespell ou j'ai ajout\'e9 dans le menu le choix du sort, ajoutant que coup de poing fait 8 d\'e9gats et boule de feu si le joueur poss\'e8de bel et bien boule de feu -18 de d\'e9gats au monstre, ayant aussi un co\'fbt en mana, si le joueur n'a plus de mana il re\'e7oit un message le pr\'e9venant ne lance pas le sort, juste fait sont patern classique d'attaque au lieu de ce faire agresser sans rien faire, si l'ont ne poss\'e8de pas le sort aussi ont passe en mode classique, ont choisit chaque tours si on veut attaquer si oui quel sort.\par
+Comme pour l'initiative je met dans la structure du personnage et du init un nouvel attribut "manamax" et "manactuel", pour ne pas confondre les deux, la mana peut-\'eatre augment\'e9 par chaque niveau pass\'e9 +3 chaque level, pareil pour les pv\par
+pour la potion de mana tr\'e8s similaire a la potion de vie donc assez facile, ne peut pas \'eatre consom\'e9, manaactuel == manamax, et la potion de mana ne peut pas ajouter plus que la manamax\par
+--------------------------------------------------------------------------------------------------------------------------\par
+Bonus c\'f4t\'e9 Quentin: \par
+Mode mod\'e9rateur :\par
+Cr\'e9ation du classe Cristian cach\'e9 dans charcreation, pour cr\'e9e un personnage ayant tous les droit, acc\'e8s au marchand gratuit, de modifier directement dans le jeu : pv, argent, mana et peut cr\'e9e sa propre comp\'e9tence, son nom, si elle co\'fbte de la mana, si elle peut soign\'e9, ou encore attaqu\'e9. Cette utilisateur a aussi par d\'e9fault le sort one push qui one shot sont adversaire.\par
+Mode marchand am\'e9liorer:\par
+La possibilit\'e9 d'acheter comme vendre, c'est item / option surprimer quand ont p\'e9n\'e8tre l'inventaire, voir l'index et l'objet correspondant, pour supprimer un item de votre choix, je n'est fait que re travaill\'e9 vite fait cette fonction pour faire appara\'eetre l'index correspondant a l'item, les commandes ont \'e9tait faites par Guillaume qui a eu l'id\'e9e, j'ai juste eu un probl\'e8me, qui \'e9tait quand ont supprim\'e9 un item il le fessait mais renvoy\'e9 toujour un message sans faire appara\'eetre l'item, pour palier a \'e7a, j'ai du fmt.Print("") print rien.\par
+Nouveau sort li\'e9 aux classes + loot mob :\par
+Suite au niveaujoueur cr\'e9e par Guillaume, pour ma part j'ai r\'e9alis\'e9, des sort d\'e9di\'e9 a des classe sp\'e9cifiques et un level comme par exemple "Arbre de vie" pour un Elfe qui passe lvl 9 il re\'e7oit le sort, et ce sort covertie le nombre de mana en pv du joueur, aussi un autre sort pour un nain lvl 3, qui invoques des squelettes comprit entre 0 et 10 le sort peut \'e9chouer, aussi non les squelettes reste 2 tours et tape en m\'eame temp que sont invocateur 1 d\'e9g\'e2ts par squelettes. \par
+J'ai eu une grosse erreur sur le nombre de tours pour l'invocations des squelettes qui rester trop longtemp ou pas assez, j'ai du d\'e9clarer des variables en dehors de la fonction , il y'a tourjours une erreur peut-\'eatre corriger au rendue mais qui renvoie un message de l'invocation des squelettes 3 fois d'affil\'e9s, apr\'e8s le 2\'e8me tours c'est le seul probl\'e8me.\par
+En parrall\'e8le j'ai cr\'e9e une fonction, de drop al\'e9atoire li\'e9 au premier monstre, et loot aussi des pi\'e8ces d'or, si le monstre meurt l'item et l'argent seront ajout\'e9 a l'inventaire et a l'argent actuel du joueur.\par
+En++ \par
+Si un sort n'appartient pas a un joueur lors du mode combat il ne le voie pas appara\'eetre m\'eame s'il tente il ne pourra pas il faut imp\'e9rativement les avoir\par
+SI une command, n'est pas reconnue ont retourne au menu temp que l'ont n'\'e9crit pas exit\par
+Re\'e7oit une r\'e9compense(tous les 2 niveau paser) potion plus des bonus comme les pvmax qui augmente et \'e7a manamax\par
+Ne peut ajout\'e9 le sort s'il la d\'e9ja\par
+PNJ et Menu cach\'e9 li\'e9 a la classe "Cristian"\par
+\par
+}
+ 
